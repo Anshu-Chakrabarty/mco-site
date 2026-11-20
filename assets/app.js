@@ -35,14 +35,18 @@ function toggleList(id){
 }
 function sync(){
   $$('.qcount').forEach(e=>e.textContent=list.length);
+  $$('.quote-pill').forEach(el=>el.classList.toggle('has', list.length>0));
   $$('[data-add]').forEach(b=>{ const on=inList(b.dataset.add); b.classList.toggle('in',on);
-    if(b.classList.contains('add')) b.textContent=on?'✓':'+'; else b.textContent=on?'✓ In quote list':'+ Add to quote list'; });
+    const name=(byId(b.dataset.add)||{}).name||'this product';
+    b.setAttribute('aria-label', (on?'Remove ':'Add ')+name+' to quote');
+    b.title=on?'Remove from quote':'Add to quote';
+    if(b.classList.contains('add')) b.textContent=on?'✓':'+'; else b.textContent=on?'✓ In quote list':'Add to quote'; });
   renderDrawer();
 }
 function renderDrawer(){
   const el=$('#dList'); if(!el) return;
   el.innerHTML = list.length ? list.map(it=>{ const p=byId(it.id); return `
-    <div class="d-item"><img src="${p.img}" alt=""><div><a href="${p.slug}.html"><b>${esc(p.name)}</b></a><small>${p.buy&&p.rent?'Buy or rent':p.rent?'Rent':'Buy'}</small>
+    <div class="d-item"><img src="${p.img}" alt="${esc(p.name)}"><div><a href="${p.slug}.html"><b>${esc(p.name)}</b></a><small>${p.buy&&p.rent?'Buy or rent':p.rent?'Rent':'Buy'}</small>
     <div class="qty"><button data-q="-1" data-id="${p.id}" aria-label="Decrease">−</button><input type="number" min="1" value="${it.qty}" data-id="${p.id}" aria-label="Quantity"><button data-q="1" data-id="${p.id}" aria-label="Increase">+</button></div></div>
     <button class="x x-sm" data-rm="${p.id}" aria-label="Remove">×</button></div>`; }).join('')
     : '<p class="empty" style="padding:30px 0">Your list is empty.<br>Tap “+” on any product to add it.</p>';
@@ -150,6 +154,7 @@ function successHTML(lead){
     <h2>Your price code is ready</h2>
     <p>Thanks ${esc(lead.name.split(' ')[0])}! Send it to us on WhatsApp and you'll get your exact quote, ${CONFIG.replyPromise}.</p>
     <div class="codebox"><small>Your price code</small><div class="code">${lead.code}</div><button type="button" data-copy="${lead.code}">Copy code</button></div>
+    <div class="wa-mock"><b>What we reply on WhatsApp</b><p>Thanks ${esc(lead.name.split(' ')[0])}. Code ${esc(lead.code)} — ${esc(lead.items.map(i=>i.product+' × '+i.qty).join(', ')||'your request')}. Here is your itemised price…</p></div>
     <div class="btns">
       <a class="btn btn-wa" href="${waLink(txt)}" target="_blank" rel="noopener">Send code on WhatsApp (fastest)</a>
       <a class="btn btn-line" href="${mail}">Send by email instead</a>
@@ -170,7 +175,7 @@ function openQuote(ids,opts){
       <span class="eyebrow">Request a price code</span>
       <h2>${items.length===1?esc(byId(items[0].id).name):items.length?'Your quote list':'What do you need?'}</h2>
       <p>Takes under a minute. We'll reply with an exact, itemised quote.</p>
-      ${items.length?`<div class="qitems">${items.map(i=>{const p=byId(i.id);return `<span class="qitem"><img src="${p.img}" alt="">${esc(p.name)}${items.length>1?' × '+i.qty:''}</span>`;}).join('')}</div>`:''}
+      ${items.length?`<div class="qitems">${items.map(i=>{const p=byId(i.id);return `<span class="qitem"><img src="${p.img}" alt="${esc(p.name)}">${esc(p.name)}${items.length>1?' × '+i.qty:''}</span>`;}).join('')}</div>`:''}
     </div>
     <div class="qbody" id="qBody">${formHTML('m',items.map(i=>i.id),{mode:opts.mode,qty:items.length===1?items[0].qty:1,notes:opts.notes||(studio?'Studio booking for a product shoot. Date & hours: ':'')})}</div>`;
   bindForm($('#mForm'),()=>items.map(x=>({...x})),lead=>{ $('#qModal').innerHTML='<button class="x" data-close="qOverlay" aria-label="Close">×</button>'+successHTML(lead); });
@@ -190,7 +195,7 @@ function mountInline(host){
   }
   const mode = params.get('mode') || host.dataset.mode;
   const items = ids.filter(byId).map(id=>({id,qty:(list.find(x=>x.id===id)||{}).qty||1}));
-  const summary = items.length>1||host.hasAttribute('data-from-url')&&items.length ? `<div class="qitems" style="margin:0 0 18px">${items.map(i=>{const p=byId(i.id);return `<span class="qitem"><img src="${p.img}" alt="">${esc(p.name)}${items.length>1?' × '+i.qty:''}</span>`;}).join('')}</div>`:'';
+  const summary = items.length>1||host.hasAttribute('data-from-url')&&items.length ? `<div class="qitems" style="margin:0 0 18px">${items.map(i=>{const p=byId(i.id);return `<span class="qitem"><img src="${p.img}" alt="${esc(p.name)}">${esc(p.name)}${items.length>1?' × '+i.qty:''}</span>`;}).join('')}</div>`:'';
   host.innerHTML = summary + formHTML('i'+Math.random().toString(36).slice(2,6), items.map(i=>i.id), {mode, notes:host.dataset.notes||'', qty:items.length===1?items[0].qty:1});
   bindForm(host.querySelector('form'),()=>items.map(x=>({...x})),lead=>{
     host.innerHTML=successHTML(lead)+'<p class="fine"><button class="link" type="button">Request another code</button></p>';
@@ -235,10 +240,12 @@ $$('.has-drop > button').forEach(b=>b.addEventListener('click',e=>{ e.stopPropag
 document.addEventListener('click',()=>$$('.has-drop.open').forEach(d=>d.classList.remove('open')));
 
 /* ---------- Reveal ---------- */
-if('IntersectionObserver' in window){
-  const io=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }}),{threshold:.1});
+if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)){
+  $$('.reveal').forEach(el=>el.classList.add('in'));
+} else {
+  const io=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }}),{threshold:0.01,rootMargin:'0px 0px 12% 0px'});
   $$('.reveal').forEach(el=>io.observe(el));
-} else $$('.reveal').forEach(el=>el.classList.add('in'));
+}
 
 /* ---------- Catalogue popup (once per visit) ---------- */
 let shown=false; try{ shown=sessionStorage.getItem('mco_promo')==='1'; }catch(e){}
@@ -255,5 +262,52 @@ $('#promoForm')?.addEventListener('submit',async e=>{
 });
 
 $$('.yr').forEach(e=>e.textContent=new Date().getFullYear());
+const HINT={
+  headless:'UK 8–10 and size M · matte, gloss or black',
+  realistic:'UK 8–10 and size M · sculpted faces',
+  abstract:'UK 8–10 and size M · gloss black or white',
+  colourful:'UK 8–10 and size M · metallic and gloss colours',
+  sports:'Athletic build · running and training poses',
+  children:'Toddler to pre-teen · girl and boy',
+  'dress-forms':'Pinnable · a range of dress sizes',
+  'body-forms':'For tops and dresses · table or floor stand',
+  heads:'For wigs, jewellery and eyewear',
+  legs:'For denim, hosiery and footwear',
+  torsos:'For tops and jackets · floor or hanging',
+  racks:'Wrought iron · single pieces or bulk',
+  'hangers-plastic':'Any quantity · volume pricing',
+  'hangers-metal':'Any quantity · volume pricing',
+  'hangers-wooden':'Any quantity · volume pricing',
+  't-stand':'Display stands · buy or rent',
+  mirrors:'Full length · distortion-free glass',
+  'steam-irons':'For sale or rent, to finish a display',
+  studio:'Bhowanipore studio · mannequins ready on set'
+};
+$$('.card').forEach(card=>{
+  const b=card.querySelector('[data-add]');
+  if(!b||!HINT[b.dataset.add]||card.querySelector('.card-spec')) return;
+  const spec=document.createElement('span');
+  spec.className='card-spec';
+  spec.textContent=HINT[b.dataset.add];
+  const title=card.querySelector('.card-body h3');
+  if(title) title.insertAdjacentElement('afterend', spec);
+});
+(function structured(){
+  const blocks=[];
+  const faqs=[...document.querySelectorAll('details')].map(d=>{
+    const q=d.querySelector('summary'); const a=d.querySelector('p');
+    if(!q||!a) return null;
+    return {'@type':'Question',name:q.textContent.trim(),acceptedAnswer:{'@type':'Answer',text:a.textContent.trim()}};
+  }).filter(Boolean);
+  const hasType=type=>[...document.querySelectorAll('script[type="application/ld+json"]')].some(s=>{ try{ return JSON.parse(s.textContent)['@type']===type; }catch(e){ return false; } });
+  if(faqs.length && !hasType('FAQPage')) blocks.push({'@context':'https://schema.org','@type':'FAQPage',mainEntity:faqs});
+  const slug=(location.pathname.split('/').pop()||'index.html').replace(/\.html$/,'');
+  const product=P.find(p=>p.slug===slug);
+  if(product && !hasType('Product')){
+    const desc=document.querySelector('meta[name="description"]');
+    blocks.push({'@context':'https://schema.org','@type':'Product',name:product.name,image:product.img,description:desc?desc.content:'',brand:{'@type':'Brand',name:'The M Co.'},category:product.group});
+  }
+  blocks.forEach(obj=>{ const s=document.createElement('script'); s.type='application/ld+json'; s.textContent=JSON.stringify(obj); document.head.appendChild(s); });
+})();
 sync();
 })();

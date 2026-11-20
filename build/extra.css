@@ -4,7 +4,7 @@
 .has-drop > button.active{color:var(--gold)}
 .wa-mock{margin-top:12px;background:#e7f8ee;border-radius:14px;padding:12px 14px;max-width:320px}
 .wa-mock b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#0e7a4b;margin-bottom:4px}
-.wa-mock p{font-size:13.5px;color:var(--ink);margin:0;line-height:1.45}
+.wa-mock p{font-size:13.5px;color:var(--ink);margin:0;line-height:1.45;white-space:pre-wrap}
 .card-spec{font-size:12.5px;font-weight:600;color:var(--ink-2);line-height:1.35}
 .quick-card .qc-title{font-family:var(--serif);font-size:23px;font-weight:500;line-height:1.2;margin-bottom:4px;color:var(--ink)}
 @media (max-width:1240px){

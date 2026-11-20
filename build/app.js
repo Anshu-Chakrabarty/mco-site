@@ -98,8 +98,8 @@ function formHTML(prefix,items,opts){
       <div class="rent-only"><label class="lbl">Duration</label><select class="field" name="duration"><option>1 day</option><option>2–3 days</option><option>1 week</option><option>2 weeks</option><option>1 month</option><option>Longer / not sure</option></select></div>
       <div class="full"><label class="lbl">Size, finish or anything else?</label><textarea class="field" name="notes" rows="3" placeholder="e.g. 4 female headless in matte white, UK size 10, plus 2 racks">${esc(opts.notes||'')}</textarea></div>
     </div>
-    <button class="btn btn-gold btn-block" type="submit" style="margin-top:18px">Get my price code</button>
-    <p class="fine">🔒 Your details are only used to send your quote.</p>
+    <button class="btn btn-gold btn-block" type="submit" style="margin-top:18px">Message us on WhatsApp</button>
+    <p class="fine">You send the requirement. We reply on that chat and take it from there.</p>
   </form>`;
 }
 function bindForm(form,itemsGetter,onDone){
@@ -124,6 +124,8 @@ function bindForm(form,itemsGetter,onDone){
       mode:form.mode.value, business:form.business.value, start:form.start.value,
       duration:form.mode.value!=='Buy'?form.duration.value:'', notes:form.notes.value.trim(),
       items:items.map(i=>({product:byId(i.id).name,qty:i.qty})) };
+    lead.code=makeCode(items);
+    window.open(waLink(leadText(lead)),'_blank','noopener');
     submitLead(lead,items).then(onDone);
   });
 }
@@ -133,14 +135,15 @@ function makeCode(items){
   return 'MCO-'+c+'-'+r;
 }
 function leadText(l){
-  return `Hi The M Co.! Please send me the price for code *${l.code}*\n\n• I want to: ${l.mode}\n`+
-    l.items.map(i=>`• ${i.product} × ${i.qty}`).join('\n')+'\n'+
+  return `Hi The M Co., here is what I need a price for.\n\n• I want to: ${l.mode}\n`+
+    (l.items.length?l.items.map(i=>`• ${i.product} × ${i.qty}`).join('\n')+'\n':'')+
     (l.duration?`• Rental: from ${l.start||'TBD'}, ${l.duration}\n`:'')+(l.city?`• Location: ${l.city}\n`:'')+
-    `• I am a: ${l.business}\n`+(l.notes?`• Notes: ${l.notes}\n`:'')+
-    `\nName: ${l.name}\nPhone: ${l.phone}`+(l.email?`\nEmail: ${l.email}`:'');
+    (l.business?`• I am a: ${l.business}\n`:'')+(l.notes?`• Notes: ${l.notes}\n`:'')+
+    (l.name && l.name!=='WhatsApp enquiry'?`\nName: ${l.name}\n`:'\n')+`Phone: ${l.phone}`+(l.email?`\nEmail: ${l.email}`:'')+
+    `\n\nPlease reply on this chat with the price.`;
 }
 async function submitLead(lead,items){
-  lead.code=makeCode(items); lead.page=location.href; lead.time=new Date().toISOString();
+  if(!lead.code) lead.code=makeCode(items); lead.page=location.href; lead.time=new Date().toISOString();
   const p=new URLSearchParams(location.search); ['utm_source','utm_medium','utm_campaign','gclid','fbclid'].forEach(k=>{ if(p.get(k)) lead[k]=p.get(k); });
   if(CONFIG.endpoint){ try{ await fetch(CONFIG.endpoint,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(lead)}); }catch(e){} }
   track('lead_submit',{code:lead.code,mode:lead.mode,items:lead.items.length});
@@ -151,15 +154,14 @@ function successHTML(lead){
   const mail='mailto:'+CONFIG.email+'?subject='+encodeURIComponent('Price request '+lead.code)+'&body='+encodeURIComponent(txt.replace(/\*/g,''));
   return `<div class="success">
     <div class="tick"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg></div>
-    <h2>Your price code is ready</h2>
-    <p>Thanks ${esc(lead.name.split(' ')[0])}! Send it to us on WhatsApp and you'll get your exact quote, ${CONFIG.replyPromise}.</p>
-    <div class="codebox"><small>Your price code</small><div class="code">${lead.code}</div><button type="button" data-copy="${lead.code}">Copy code</button></div>
-    <div class="wa-mock"><b>What we reply on WhatsApp</b><p>Thanks ${esc(lead.name.split(' ')[0])}. Code ${esc(lead.code)} — ${esc(lead.items.map(i=>i.product+' × '+i.qty).join(', ')||'your request')}. Here is your itemised price…</p></div>
+    <h2>Send this to us</h2>
+    <p>Thanks ${esc(lead.name.split(' ')[0])}. WhatsApp should be open with your requirement. Send that message, and we reply on the same chat, ${CONFIG.replyPromise}.</p>
+    <div class="wa-mock"><b>The message you send</b><p>${esc(txt.replace(/\*/g,''))}</p></div>
     <div class="btns">
-      <a class="btn btn-wa" href="${waLink(txt)}" target="_blank" rel="noopener">Send code on WhatsApp (fastest)</a>
+      <a class="btn btn-wa" href="${waLink(txt)}" target="_blank" rel="noopener">Open WhatsApp with my requirement</a>
       <a class="btn btn-line" href="${mail}">Send by email instead</a>
     </div>
-    <p class="fine">Prefer to talk? Call <a href="tel:+919831766745"><b>+91 98317 66745</b></a> and quote your code.</p>
+    <p class="fine">Prefer to call? <a href="tel:+919831766745"><b>+91 98317 66745</b></a>. Tell us what you need and we'll take it from there.</p>
   </div>`;
 }
 document.addEventListener('click',e=>{ const c=e.target.closest('[data-copy]'); if(c){ navigator.clipboard&&navigator.clipboard.writeText(c.dataset.copy); toast('Code copied'); }});
@@ -172,9 +174,9 @@ function openQuote(ids,opts){
   $('#qModal').innerHTML=`
     <button class="x" data-close="qOverlay" aria-label="Close">×</button>
     <div class="qhead">
-      <span class="eyebrow">Request a price code</span>
-      <h2>${items.length===1?esc(byId(items[0].id).name):items.length?'Your quote list':'What do you need?'}</h2>
-      <p>Takes under a minute. We'll reply with an exact, itemised quote.</p>
+      <span class="eyebrow">Ask for the price</span>
+      <h2>${items.length===1?esc(byId(items[0].id).name):items.length?'Your requirements':'What do you need?'}</h2>
+      <p>Send us what you need on WhatsApp. We reply on that chat and start the conversation with the price.</p>
       ${items.length?`<div class="qitems">${items.map(i=>{const p=byId(i.id);return `<span class="qitem"><img src="${p.img}" alt="${esc(p.name)}">${esc(p.name)}${items.length>1?' × '+i.qty:''}</span>`;}).join('')}</div>`:''}
     </div>
     <div class="qbody" id="qBody">${formHTML('m',items.map(i=>i.id),{mode:opts.mode,qty:items.length===1?items[0].qty:1,notes:opts.notes||(studio?'Studio booking for a product shoot. Date & hours: ':'')})}</div>`;
@@ -198,7 +200,7 @@ function mountInline(host){
   const summary = items.length>1||host.hasAttribute('data-from-url')&&items.length ? `<div class="qitems" style="margin:0 0 18px">${items.map(i=>{const p=byId(i.id);return `<span class="qitem"><img src="${p.img}" alt="${esc(p.name)}">${esc(p.name)}${items.length>1?' × '+i.qty:''}</span>`;}).join('')}</div>`:'';
   host.innerHTML = summary + formHTML('i'+Math.random().toString(36).slice(2,6), items.map(i=>i.id), {mode, notes:host.dataset.notes||'', qty:items.length===1?items[0].qty:1});
   bindForm(host.querySelector('form'),()=>items.map(x=>({...x})),lead=>{
-    host.innerHTML=successHTML(lead)+'<p class="fine"><button class="link" type="button">Request another code</button></p>';
+    host.innerHTML=successHTML(lead)+'<p class="fine"><button class="link" type="button">Send another requirement</button></p>';
     host.querySelector('.link').onclick=()=>mountInline(host);
     host.scrollIntoView({behavior:'smooth',block:'center'});
   });
@@ -212,10 +214,23 @@ if(qf){
   $('.seg',qf).addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; $$('.seg button',qf).forEach(x=>x.classList.toggle('on',x===b)); $('#qmode').value=b.dataset.v; });
   qf.addEventListener('submit',e=>{ e.preventDefault();
     const id=$('#qcat').value, ph=$('#qphone').value.replace(/\D/g,'').slice(-10);
-    const f=openQuote(id?[id]:[],{mode:$('#qmode').value});
-    if(/^[6-9]\d{9}$/.test(ph)) f.phone.value=ph;
-    setTimeout(()=>f.name.focus(),80);
+    if(!id){ $('#qcat').focus(); toast('Choose what you need'); return; }
+    if(!/^[6-9]\d{9}$/.test(ph)){ $('#qphone').focus(); toast('Enter a valid 10-digit WhatsApp number'); return; }
+    const p=byId(id);
+    const lead={name:'WhatsApp enquiry',phone:'+91'+ph,email:'',city:'',mode:$('#qmode').value,business:'',start:'',duration:'',notes:'',
+      items:[{product:p.name,qty:1}]};
+    lead.code=makeCode([{id}]);
+    window.open(waLink(leadText(lead)),'_blank','noopener');
+    submitLead(lead,[{id,qty:1}]);
+    qf.reset(); $('#qmode').value='Buy';
+    $$('.seg button',qf).forEach((b,i)=>b.classList.toggle('on',i===0));
+    toast('WhatsApp is open with your requirement. Send it, and we will reply.');
   });
+const heroSlides=$$('.hero-img img');
+if(heroSlides.length>1 && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+  let hi=0;
+  setInterval(()=>{ heroSlides[hi].classList.remove('on'); hi=(hi+1)%heroSlides.length; heroSlides[hi].classList.add('on'); },4500);
+}
 }
 
 /* ---------- Catalogue filter (products page) ---------- */

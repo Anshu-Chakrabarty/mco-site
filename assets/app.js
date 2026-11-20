@@ -254,8 +254,9 @@ if(fabBtn&&heroForm&&'IntersectionObserver' in window){
 /* ---------- Catalogue popup (once per visit) ---------- */
 let shown=false; try{ shown=sessionStorage.getItem('mco_promo')==='1'; }catch(e){}
 function showPromo(){ if(!CONFIG.exitPopup||shown||$('.overlay.open')||!$('#promoOverlay')) return; shown=true; try{sessionStorage.setItem('mco_promo','1');}catch(e){} openOv('promoOverlay'); track('promo_shown'); }
-document.addEventListener('mouseout',e=>{ if(!e.relatedTarget&&e.clientY<8) showPromo(); });
-let maxS=0; addEventListener('scroll',()=>{ const s=scrollY/Math.max(1,document.body.scrollHeight-innerHeight); if(s>maxS) maxS=s; if(maxS>.75&&innerWidth<680) showPromo(); },{passive:true});
+document.addEventListener('mouseout',e=>{ if(!e.relatedTarget) showPromo(); });
+addEventListener('scroll',()=>{ const s=scrollY/Math.max(1,document.body.scrollHeight-innerHeight); if(s>.45) showPromo(); },{passive:true});
+setTimeout(showPromo, 20000);
 $('#promoForm')?.addEventListener('submit',async e=>{
   e.preventDefault(); const ph=$('#promoPhone').value.replace(/\D/g,'').slice(-10);
   if(!/^[6-9]\d{9}$/.test(ph)){ $('#promoPhone').focus(); toast('Enter a valid 10-digit number'); return; }

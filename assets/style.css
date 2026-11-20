@@ -418,11 +418,11 @@ footer a:hover{color:#fff}
 .cat-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .cat-tile{position:relative;border-radius:var(--r-lg);overflow:hidden;background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;transition:.25s}
 .cat-tile:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
-.cat-tile .ct-img{aspect-ratio:4/3;background:#f3f0ea}
-.cat-tile .ct-img img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:10px}
-.cat-tile .ct-body{padding:22px}
-.cat-tile h3{font-size:24px;margin-bottom:6px}
-.cat-tile p{font-size:14px;color:var(--muted);margin-bottom:12px}
+.cat-tile .ct-img{position:relative;aspect-ratio:8/5;margin:12px 12px 0;border-radius:14px;overflow:hidden;background:#ececec}
+.cat-tile .ct-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.cat-tile .ct-body{padding:14px 16px 16px}
+.cat-tile h3{font-size:22px;margin-bottom:4px}
+.cat-tile p{font-size:14px;color:var(--muted);margin-bottom:8px}
 .cat-tile .more{font-weight:600;font-size:14px;display:inline-flex;gap:6px;align-items:center;color:var(--gold)}
 .card{text-decoration:none}
 

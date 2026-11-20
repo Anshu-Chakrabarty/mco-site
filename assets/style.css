@@ -83,8 +83,8 @@ header.nav.scrolled{border-color:var(--line);box-shadow:0 6px 24px rgba(0,0,0,.0
 .hero-proof div{font-size:13px;color:var(--ink-2);line-height:1.35;font-weight:500}
 .hero-proof strong{display:block;font-family:var(--serif);font-size:32px;color:var(--ink);font-weight:600}
 .hero-visual{position:relative}
-.hero-img{position:relative;z-index:0;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:5/4.4;background:#d9d3c8;box-shadow:var(--shadow-lg)}
-.hero-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 18%;opacity:0;transition:opacity .8s ease}
+.hero-img{position:relative;z-index:0;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/4.6;background:#d9d3c8;box-shadow:var(--shadow-lg)}
+.hero-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0;transition:opacity .8s ease}
 .hero-img img.pos-forms{object-position:center 42%}
 .hero-img img.on{opacity:1}
 .quick-card{position:absolute;left:-40px;bottom:-34px;z-index:3;width:min(340px,86%);background:#fff;border-radius:var(--r-lg);padding:22px;box-shadow:var(--shadow-lg);border:1px solid var(--line)}
@@ -361,7 +361,6 @@ footer a:hover{color:#fff}
   .logo small{display:none}
   .nav-cta .btn{display:none}
   .quote-pill .lbl-txt{display:none}
-  .hero-visual{margin-bottom:200px}
   .quick-card{left:0;right:0;width:auto;bottom:-190px;margin:0 8px}
   .badge-float{right:14px}
   .steps,.why-grid,.uses,.fgrid{grid-template-columns:1fr}

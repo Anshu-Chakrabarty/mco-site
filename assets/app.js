@@ -207,30 +207,11 @@ function mountInline(host){
 }
 $$('[data-inline-form]').forEach(mountInline);
 
-/* Hero quick form */
-const qf=$('#quickForm');
-if(qf){
-  $('#qcat').innerHTML='<option value="">What do you need?</option>'+P.filter(p=>!p.hidden).map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
-  $('.seg',qf).addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; $$('.seg button',qf).forEach(x=>x.classList.toggle('on',x===b)); $('#qmode').value=b.dataset.v; });
-  qf.addEventListener('submit',e=>{ e.preventDefault();
-    const id=$('#qcat').value, ph=$('#qphone').value.replace(/\D/g,'').slice(-10);
-    if(!id){ $('#qcat').focus(); toast('Choose what you need'); return; }
-    if(!/^[6-9]\d{9}$/.test(ph)){ $('#qphone').focus(); toast('Enter a valid 10-digit WhatsApp number'); return; }
-    const p=byId(id);
-    const lead={name:'WhatsApp enquiry',phone:'+91'+ph,email:'',city:'',mode:$('#qmode').value,business:'',start:'',duration:'',notes:'',
-      items:[{product:p.name,qty:1}]};
-    lead.code=makeCode([{id}]);
-    window.open(waLink(leadText(lead)),'_blank','noopener');
-    submitLead(lead,[{id,qty:1}]);
-    qf.reset(); $('#qmode').value='Buy';
-    $$('.seg button',qf).forEach((b,i)=>b.classList.toggle('on',i===0));
-    toast('WhatsApp is open with your requirement. Send it, and we will reply.');
-  });
+/* Hero photo slider */
 const heroSlides=$$('.hero-img img');
 if(heroSlides.length>1 && !matchMedia('(prefers-reduced-motion: reduce)').matches){
   let hi=0;
   setInterval(()=>{ heroSlides[hi].classList.remove('on'); hi=(hi+1)%heroSlides.length; heroSlides[hi].classList.add('on'); },4500);
-}
 }
 
 /* ---------- Catalogue filter (products page) ---------- */
@@ -261,9 +242,9 @@ if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObse
   const io=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }}),{threshold:0.01,rootMargin:'0px 0px 12% 0px'});
   $$('.reveal').forEach(el=>io.observe(el));
 }
-const fabBtn=document.querySelector('.fab'), heroForm=document.querySelector('#quickForm');
-if(fabBtn&&heroForm&&'IntersectionObserver' in window){
-  new IntersectionObserver(([en])=>fabBtn.classList.toggle('is-clear', en.isIntersecting),{threshold:.2}).observe(heroForm);
+const fabBtn=document.querySelector('.fab'), heroImg=document.querySelector('.hero-img');
+if(fabBtn&&heroImg&&'IntersectionObserver' in window){
+  new IntersectionObserver(([en])=>fabBtn.classList.toggle('is-clear', en.isIntersecting),{threshold:.35}).observe(heroImg);
 }
 
 /* ---------- Catalogue popup (once per visit) ---------- */

@@ -59,7 +59,7 @@ document.addEventListener('click',e=>{
   const qb=e.target.closest('[data-quote]'); if(qb){ e.preventDefault();
     const ids = qb.dataset.quote==='list' ? null : (qb.dataset.quote ? qb.dataset.quote.split(',') : []);
     openQuote(ids,{mode:qb.dataset.mode,notes:qb.dataset.notes}); return; }
-  const w=e.target.closest('[data-wa]'); if(w){ e.preventDefault(); track('whatsapp_click'); window.open(waLink(w.dataset.wa),'_blank','noopener'); }
+  const w=e.target.closest('[data-wa]'); if(w){ e.preventDefault(); track('whatsapp_click'); if(w.closest('#promoOverlay')) closeOv('promoOverlay'); window.open(waLink(w.dataset.wa),'_blank','noopener'); }
 });
 document.addEventListener('change',e=>{ if(e.target.matches('#dList input')){ const it=list.find(x=>x.id===e.target.dataset.id); it.qty=Math.max(1,parseInt(e.target.value)||1); save(); }});
 function openDrawer(){ renderDrawer(); $('#drawer').classList.add('open'); $('#scrim').classList.add('open'); }
@@ -253,15 +253,6 @@ function showPromo(){ if(!CONFIG.exitPopup||shown||$('.overlay.open')||!$('#prom
 document.addEventListener('mouseout',e=>{ if(!e.relatedTarget) showPromo(); });
 addEventListener('scroll',()=>{ const s=scrollY/Math.max(1,document.body.scrollHeight-innerHeight); if(s>.45) showPromo(); },{passive:true});
 setTimeout(showPromo, 20000);
-$('#promoForm')?.addEventListener('submit',async e=>{
-  e.preventDefault(); const ph=$('#promoPhone').value.replace(/\D/g,'').slice(-10);
-  if(!/^[6-9]\d{9}$/.test(ph)){ $('#promoPhone').focus(); toast('Enter a valid 10-digit number'); return; }
-  const lead={name:'Catalogue request',phone:'+91'+ph,mode:'Catalogue',business:'',items:[],notes:'Requested full catalogue'};
-  await submitLead(lead,[]);
-  window.open(waLink(`Hi The M Co.! Please send me your full catalogue. (Ref ${lead.code})`),'_blank','noopener');
-  closeOv('promoOverlay'); toast('Opening WhatsApp…');
-});
-
 $$('.yr').forEach(e=>e.textContent=new Date().getFullYear());
 const HINT={
   headless:'UK 8–10 and size M · matte, gloss or black',

@@ -45,7 +45,7 @@ function header(active) {
   <a href="index.html" class="logo" aria-label="The M Co. home"><img src="${SITE.logo}" alt="The M Co. logo"><span><b>The M Co.</b><small>Mannequin Studio</small></span></a>
   <nav class="menu" aria-label="Main">
     <a href="index.html"${a('home')}>Home</a>
-    <div class="has-drop"><button type="button"${active === 'products' ? ' style="color:var(--gold)"' : ''}>Products ${I.chev}</button><div class="drop">${drop}<a class="all" href="products.html">View all products →</a></div></div>
+    <div class="has-drop"><a href="products.html"${active === 'products' ? ' style="color:var(--gold)"' : ''}>Products ${I.chev}</a><div class="drop">${drop}<a class="all" href="products.html">View all products →</a></div></div>
     <a href="rental.html"${a('rental')}>Rental</a>
     <a href="studio.html"${a('studio')}>Studio</a>
     <a href="about.html"${a('about')}>About</a>

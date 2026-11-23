@@ -1,7 +1,7 @@
 
 .drop.drop-sm{grid-template-columns:210px;padding:12px 16px}
 .drop.drop-sm a{padding:8px 0;font-size:15px}
-.has-drop > button.active{color:var(--gold)}
+.has-drop > a.active{color:var(--gold)}
 .wa-mock{margin-top:12px;background:#e7f8ee;border-radius:14px;padding:12px 14px;max-width:320px}
 .wa-mock b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#0e7a4b;margin-bottom:4px}
 .wa-mock p{font-size:13.5px;color:var(--ink);margin:0;line-height:1.45;white-space:pre-wrap}
@@ -19,11 +19,11 @@
 .menu a.active{color:var(--gold)}
 .menu a.active::after{width:100%}
 .has-drop{position:relative}
-.has-drop>button{display:inline-flex;align-items:center;gap:6px;padding:6px 0;font-weight:500;font-size:15px}
-.has-drop>button svg{width:12px;height:12px;transition:.2s}
+.has-drop>a{display:inline-flex;align-items:center;gap:6px;padding:6px 0;font-weight:500;font-size:15px}
+.has-drop>a svg{width:12px;height:12px;transition:.2s}
 .drop{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(6px);background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-lg);padding:18px;display:grid;grid-template-columns:repeat(3,200px);gap:8px 24px;opacity:0;visibility:hidden;transition:.2s;z-index:60}
 .has-drop:hover .drop,.has-drop.open .drop{opacity:1;visibility:visible;transform:translateX(-50%)}
-.has-drop:hover>button svg{transform:rotate(180deg)}
+.has-drop:hover>a svg{transform:rotate(180deg)}
 .drop::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px}
 .drop h5{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
 .drop h5 a::after{display:none}

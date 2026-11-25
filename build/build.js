@@ -146,9 +146,9 @@ const card = p => `<a class="card" href="${p.slug}.html" data-group="${p.group}"
 
 const faqList = items => items.map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');
 const crumbs = arr => `<nav class="crumbs" aria-label="Breadcrumb">${arr.map(([t, h]) => h ? `<a href="${h}">${esc(t)}</a>` : `<b style="color:var(--ink)">${esc(t)}</b>`).join('<span>/</span>')}</nav>`;
-const ctaBand = (h = 'Ready for an exact price?', p = 'Pick your products and get a price code. It takes under a minute.') => `
+const ctaBand = (h = 'Ready for an exact price?', p = 'Pick your products and get a price quote. It takes under a minute.') => `
 <section style="padding-top:0"><div class="wrap"><div class="cta-band reveal"><div><h2>${h}</h2><p>${p}</p></div>
-<div class="btns"><a class="btn btn-gold" href="get-quote.html">Get my price code</a><a class="btn btn-line" href="#" data-wa="Hi The M Co., I'd like a price.">${I.wa} WhatsApp us</a></div></div></div></section>`;
+<div class="btns"><a class="btn btn-gold" href="get-quote.html">Get my price quote</a><a class="btn btn-line" href="#" data-wa="Hi The M Co., I'd like a price.">${I.wa} WhatsApp us</a></div></div></div></section>`;
 const steps = `<div class="steps">
   <div class="step reveal"><div class="num">01</div><h3>Pick your products</h3><p>Browse sizes, finishes and specs. Add as many items as you like to your quote list.</p></div>
   <div class="step reveal"><div class="num">02</div><h3>Request a price code</h3><p>Tell us buy or rent, quantity and dates. You get a unique reference code right away.</p><div class="code-sample-wrap"><small>Example code</small><span class="code-sample">MCO-HDL-7K3Q</span></div></div>
@@ -184,7 +184,7 @@ page('index.html', {
       <input type="hidden" id="qmode" value="Buy">
       <div class="qc-row"><select class="field" id="qcat" aria-label="What do you need?"></select></div>
       <div class="qc-row"><input class="field" id="qphone" type="tel" inputmode="numeric" placeholder="WhatsApp number (10 digits)" aria-label="WhatsApp number"></div>
-      <button class="btn btn-gold btn-block" type="submit">Get my price code</button>
+      <button class="btn btn-gold btn-block" type="submit">Get my price quote</button>
     </form>
   </div>
 </div></section>

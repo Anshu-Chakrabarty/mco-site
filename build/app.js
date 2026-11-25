@@ -98,7 +98,7 @@ function formHTML(prefix,items,opts){
       <div class="rent-only"><label class="lbl">Duration</label><select class="field" name="duration"><option>1 day</option><option>2–3 days</option><option>1 week</option><option>2 weeks</option><option>1 month</option><option>Longer / not sure</option></select></div>
       <div class="full"><label class="lbl">Size, finish or anything else?</label><textarea class="field" name="notes" rows="3" placeholder="e.g. 4 female headless in matte white, UK size 10, plus 2 racks">${esc(opts.notes||'')}</textarea></div>
     </div>
-    <button class="btn btn-gold btn-block" type="submit" style="margin-top:18px">Message us on WhatsApp</button>
+    <button class="btn btn-gold btn-block" type="submit" style="margin-top:18px">Send</button>
     <p class="fine">You send the requirement. We reply on that chat and take it from there.</p>
   </form>`;
 }

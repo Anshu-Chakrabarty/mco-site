@@ -38,14 +38,14 @@ function header(active) {
   const drop = CATEGORIES.map(c => `<div><h5><a href="${c.slug}.html">${c.short}</a></h5>${inCat(c.id).map(p => `<a href="${p.slug}.html">${esc(p.name)}</a>`).join('')}</div>`).join('');
   return `
 <div class="topbar"><div class="wrap">
-  <div class="tb-left"><span><i class="dot"></i> Sale &amp; Rental · Since 2008</span><span>📍 Bhowanipore, Kolkata</span></div>
+  <div class="tb-left"><span><i class="dot"></i> Buy or rent · Since 2008</span><span>📍 Bhowanipore, Kolkata</span></div>
   <div class="tb-right"><a href="tel:${SITE.tel}">${SITE.phone}</a><a href="mailto:${SITE.email}">${SITE.email}</a></div>
 </div></div>
 <header class="nav" id="nav"><div class="wrap">
   <a href="index.html" class="logo" aria-label="The M Co. home"><img src="${SITE.logo}" alt="The M Co. logo"><span><b>The M Co.</b><small>Mannequin Studio</small></span></a>
   <nav class="menu" aria-label="Main">
     <a href="index.html"${a('home')}>Home</a>
-    <div class="has-drop"><a href="products.html"${active === 'products' ? ' style="color:var(--gold)"' : ''}>Sale ${I.chev}</a><div class="drop">${drop}<a class="all" href="products.html">View all products →</a></div></div>
+    <div class="has-drop"><a href="products.html"${active === 'products' ? ' style="color:var(--gold)"' : ''}>Buy ${I.chev}</a><div class="drop">${drop}<a class="all" href="products.html">View all products →</a></div></div>
     <a href="rental.html"${a('rental')}>Rental</a>
     <a href="studio.html"${a('studio')}>Studio</a>
     <a href="about.html"${a('about')}>About</a>
@@ -59,7 +59,7 @@ function header(active) {
   </div>
 </div>
 <nav class="mobile-menu" id="mmenu">
-  <a href="index.html">Home</a><a href="products.html">Sale</a>
+  <a href="index.html">Home</a><a href="products.html">Buy</a>
   ${CATEGORIES.map(c => `<a class="sub" href="${c.slug}.html">${c.short}</a>`).join('')}
   <a href="rental.html">Rental</a><a href="studio.html">Studio</a><a href="about.html">About</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a><a href="get-quote.html"><b>Get Price Quote →</b></a>
 </nav></header>`;

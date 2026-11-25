@@ -242,11 +242,6 @@ if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObse
   const io=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }}),{threshold:0.01,rootMargin:'0px 0px 12% 0px'});
   $$('.reveal').forEach(el=>io.observe(el));
 }
-const fabBtn=document.querySelector('.fab'), heroImg=document.querySelector('.hero-img');
-if(fabBtn&&heroImg&&'IntersectionObserver' in window){
-  new IntersectionObserver(([en])=>fabBtn.classList.toggle('is-clear', en.isIntersecting),{threshold:.35}).observe(heroImg);
-}
-
 /* ---------- Catalogue popup (once per visit) ---------- */
 let shown=false; try{ shown=sessionStorage.getItem('mco_promo')==='1'; }catch(e){}
 function showPromo(){ if(!CONFIG.exitPopup||shown||$('.overlay.open')||!$('#promoOverlay')) return; shown=true; try{sessionStorage.setItem('mco_promo','1');}catch(e){} openOv('promoOverlay'); track('promo_shown'); }

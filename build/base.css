@@ -315,7 +315,6 @@ footer a:hover{color:#fff}
 /* Floating + mobile bar */
 .fab{position:fixed;right:22px;bottom:22px;z-index:60;width:60px;height:60px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;box-shadow:0 10px 30px rgba(37,211,102,.45);transition:.2s}
 .fab:hover{transform:scale(1.06)}
-.fab.is-clear{opacity:0;visibility:hidden;pointer-events:none}
 .fab::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--wa);animation:pulse 2.2s infinite}
 @keyframes pulse{to{transform:scale(1.5);opacity:0}}
 .mbar{display:none}

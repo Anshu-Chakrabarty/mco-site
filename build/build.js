@@ -45,7 +45,7 @@ function header(active) {
   <a href="index.html" class="logo" aria-label="The M Co. home"><img src="${SITE.logo}" alt="The M Co. logo"><span><b>The M Co.</b><small>Mannequin Studio</small></span></a>
   <nav class="menu" aria-label="Main">
     <a href="index.html"${a('home')}>Home</a>
-    <div class="has-drop"><a href="products.html"${active === 'products' ? ' style="color:var(--gold)"' : ''}>Products ${I.chev}</a><div class="drop">${drop}<a class="all" href="products.html">View all products →</a></div></div>
+    <div class="has-drop"><a href="products.html"${active === 'products' ? ' style="color:var(--gold)"' : ''}>Sale ${I.chev}</a><div class="drop">${drop}<a class="all" href="products.html">View all products →</a></div></div>
     <a href="rental.html"${a('rental')}>Rental</a>
     <a href="studio.html"${a('studio')}>Studio</a>
     <a href="about.html"${a('about')}>About</a>
@@ -54,14 +54,14 @@ function header(active) {
   </nav>
   <div class="nav-cta">
     <button class="quote-pill" data-open-drawer aria-label="Open quote list">${I.list}<span class="lbl-txt">Quote</span><span class="count qcount">0</span></button>
-    <a class="btn btn-dark btn-sm" href="get-quote.html">Get Price Code</a>
+    <a class="btn btn-dark btn-sm" href="get-quote.html">Get Price Quote</a>
     <button class="burger" id="burger" aria-label="Menu"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </div>
 <nav class="mobile-menu" id="mmenu">
-  <a href="index.html">Home</a><a href="products.html">All products</a>
+  <a href="index.html">Home</a><a href="products.html">Sale</a>
   ${CATEGORIES.map(c => `<a class="sub" href="${c.slug}.html">${c.short}</a>`).join('')}
-  <a href="rental.html">Rental</a><a href="studio.html">Studio</a><a href="about.html">About</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a><a href="get-quote.html"><b>Get Price Code →</b></a>
+  <a href="rental.html">Rental</a><a href="studio.html">Studio</a><a href="about.html">About</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a><a href="get-quote.html"><b>Get Price Quote →</b></a>
 </nav></header>`;
 }
 
@@ -86,7 +86,7 @@ function footer() {
   <div class="f-bottom"><span>© <span class="yr"></span> The M Co. All rights reserved.</span><span><a href="https://themcostudio.com/blog/">Blog</a> · <a href="https://themcostudio.com/contact-us/">Privacy Policy / Terms</a></span></div>
 </div></footer>
 <a class="fab" href="#" data-wa="Hi The M Co., here is what I need: " aria-label="Chat on WhatsApp"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-1 1.2-.4.2-.7.1a8 8 0 01-2.4-1.5 9 9 0 01-1.6-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 00-.8.4 3.4 3.4 0 00-1 2.5 5.9 5.9 0 001.2 3.1 13.3 13.3 0 005.1 4.5c.7.3 1.3.5 1.7.6a4.2 4.2 0 001.9.1 3.2 3.2 0 002.1-1.5 2.6 2.6 0 00.2-1.5c-.1-.1-.3-.2-.6-.3zM12 21.8a9.9 9.9 0 01-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4a9.9 9.9 0 1118.2-5.3 9.9 9.9 0 01-9.9 9.9zm8.4-18.3A11.8 11.8 0 001.7 17.7L0 24l6.4-1.7a11.8 11.8 0 005.6 1.4 11.8 11.8 0 008.4-20.2z"/></svg></a>
-<div class="mbar"><a class="m-call" href="tel:${SITE.tel}">Call</a><a class="m-wa" href="#" data-wa="Hi The M Co., here is what I need: ">WhatsApp</a><a class="m-code" href="get-quote.html">Get Price Code</a></div>
+<div class="mbar"><a class="m-call" href="tel:${SITE.tel}">Call</a><a class="m-wa" href="#" data-wa="Hi The M Co., here is what I need: ">WhatsApp</a><a class="m-code" href="get-quote.html">Get Price Quote</a></div>
 <div class="overlay" id="qOverlay" role="dialog" aria-modal="true" aria-label="Request a price code"><div class="modal qmodal" id="qModal"></div></div>
 <div class="overlay" id="promoOverlay" role="dialog" aria-modal="true" aria-label="Get the catalogue"><div class="modal promo">
   <button class="x" data-close="promoOverlay" aria-label="Close">×</button>
